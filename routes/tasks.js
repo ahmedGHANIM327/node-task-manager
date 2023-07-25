@@ -66,6 +66,51 @@ router.post('/addTask', (req, res) => {
     res.send(task);
 });
 
+/******** Put **********/
+router.put('/updateTask/:id', (req, res) => {
+    // Find task to update
+    const task = tasks.find(c => c.id === parseInt(req.params.id));
+    if (!task) return res.status(404).send('The task with the given ID was not found.');
+  
+    // Validate data to update
+    const { error } = validateTask(req.body); 
+    if (error) return res.status(400).send(error.details[0].message);
+    
+    // New data
+    task.title = req.body.title; 
+    task.content = req.body.content; 
+    task.update_date = new Date().toISOString();
+
+    res.send(task);
+});
+
+router.put('/doneTask/:id', (req, res) => {
+    // Find task to update
+    const task = tasks.find(c => c.id === parseInt(req.params.id));
+    if (!task) return res.status(404).send('The task with the given ID was not found.');
+  
+    // Validate data to update
+    const { error } = validateTask(req.body); 
+    if (error) return res.status(400).send(error.details[0].message);
+    
+    // New data
+    task.status = 'Done'; 
+    task.update_date = new Date().toISOString();
+    
+    res.send(task);
+});
+
+/******** Delete **********/
+router.delete('/deleteTask/:id', (req, res) => {
+    const task = tasks.find(c => c.id === parseInt(req.params.id));
+    if (!task) return res.status(404).send('The task with the given ID was not found.');
+  
+    const index = tasks.indexOf(task);
+    tasks.splice(index, 1);
+  
+    res.send(task);
+});
+
 // Validate Task Schema
 function validateTask(task) {
 

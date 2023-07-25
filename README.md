@@ -40,7 +40,7 @@ Open your web browser and visit `http://localhost:3000` to access the Task Manag
 
 - Node.js
 - Express.js
-- Joi
+- Joi : For data validation
 
 ## Contributions
 

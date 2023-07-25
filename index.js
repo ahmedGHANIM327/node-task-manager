@@ -1,4 +1,3 @@
-const Joi = require('joi'); // For data validation
 const tasks = require('./routes/tasks');
 const express = require('express');
 const app = express();

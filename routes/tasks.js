@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const {Task} = require('./../util/mongodb.util')
 const express = require('express');
 const router = express.Router();
 
@@ -34,14 +35,16 @@ const tasks = [
 
 // Get all tasks
 router.get('/allTasks', (req, res) => {
-    res.send(tasks);
+    Task.find()
+        .then((result) => res.send(result))
+        .catch((err) => res.status(400).send(err))
 });
 
 // Get specified Task ( using ID )
 router.get('/taskByID/:id', (req, res) => {
-    const task = tasks.find(c => c.id === parseInt(req.params.id));
-    if (!task) return res.status(404).send('The task with the given ID was not found.');
-    res.send(task);
+    Task.findOne({'_id':req.params.id})
+        .then((result) => res.send(result))
+        .catch((err) => res.status(400).send(err))
 });
 
 /******** Post  **********/

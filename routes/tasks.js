@@ -1,5 +1,4 @@
-const Joi = require('joi');
-const {Task} = require('./../util/mongodb.util')
+const {Task} = require('../util/db-tasks.util')
 const express = require('express');
 const router = express.Router();
 
@@ -49,80 +48,73 @@ router.get('/taskByID/:id', (req, res) => {
 
 /******** Post  **********/
 router.post('/addTask', (req, res) => {
-    const { error } = validateTask(req.body); 
-    if (error) return res.status(400).send(error.details[0].message);
-    
+
     // Create task to add
     const task = {
-        id: tasks.length,
         title: req.body.title,
         content: req.body.content,
-        status: 'In progress',
-        date_creation : new Date().toISOString(),
-        update_date : new Date().toISOString()
     };
 
-    // Add task
-    tasks.push(task);
+    Task.create(task)
+        .then((result) => res.send(result))
+        .catch((err) => res.status(400).send(err))
 
-    // Send added task
-    res.send(task);
 });
 
 /******** Put **********/
 router.put('/updateTask/:id', (req, res) => {
-    // Find task to update
-    const task = tasks.find(c => c.id === parseInt(req.params.id));
-    if (!task) return res.status(404).send('The task with the given ID was not found.');
-  
-    // Validate data to update
-    const { error } = validateTask(req.body); 
-    if (error) return res.status(400).send(error.details[0].message);
-    
-    // New data
-    task.title = req.body.title; 
-    task.content = req.body.content; 
-    task.update_date = new Date().toISOString();
 
-    res.send(task);
+    const updatedTask = {
+        title : req.body.title,
+        content : req.body.content,
+        update_date : new Date().toISOString()
+    };
+
+    Task.findByIdAndUpdate(req.params.id,updatedTask,{ new: true })
+        .then((result) => {
+            if(result)
+            {
+                res.send(result);
+            } else {
+                res.status(404).send('No document founded or no changes made');
+            }
+        })
+        .catch((err) => res.status(400).send(err));
+
 });
 
 router.put('/doneTask/:id', (req, res) => {
-    // Find task to update
-    const task = tasks.find(c => c.id === parseInt(req.params.id));
-    if (!task) return res.status(404).send('The task with the given ID was not found.');
-  
-    // Validate data to update
-    const { error } = validateTask(req.body); 
-    if (error) return res.status(400).send(error.details[0].message);
-    
-    // New data
-    task.status = 'Done'; 
-    task.update_date = new Date().toISOString();
-    
-    res.send(task);
+
+    const updatedTask = {
+        status : 'Done',
+        update_date : new Date().toISOString()
+    };
+
+    Task.findByIdAndUpdate(req.params.id,updatedTask,{ new: true })
+        .then((result) => {
+            if(result)
+            {
+                res.send(result);
+            } else {
+                res.status(404).send('No document founded or no changes made');
+            }
+        })
+        .catch((err) => res.status(400).send(err));
 });
 
 /******** Delete **********/
 router.delete('/deleteTask/:id', (req, res) => {
-    const task = tasks.find(c => c.id === parseInt(req.params.id));
-    if (!task) return res.status(404).send('The task with the given ID was not found.');
-  
-    const index = tasks.indexOf(task);
-    tasks.splice(index, 1);
-  
-    res.send(task);
+
+    Task.findByIdAndRemove(req.params.id)
+        .then((result) => {
+            if(result)
+            {
+                res.send(result);
+            } else {
+                res.status(404).send('No document founded or no changes made');
+            }
+        })
+        .catch((err) => res.status(400).send(err));
 });
-
-// Validate Task Schema
-function validateTask(task) {
-
-    const schema = Joi.object({
-        title: Joi.string().min(3).required(),
-        content : Joi.string().min(3).required(),
-    });
-
-    return schema.validate(task);
-}
 
 module.exports = router;

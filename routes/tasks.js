@@ -1,37 +1,8 @@
-const {Task} = require('../util/db-tasks.util')
+const {Task} = require('../models/task.model')
 const express = require('express');
 const router = express.Router();
 
-// Tasks Array
-const tasks = [
-    {      
-        id: 0, 
-        title: 'Task 0',
-        content : 'Go to the desired location, where you want to create a file.',
-        status: 'In progress',
-        date_creation : new Date('2018-09-22T15:00:00'),
-        update_date : new Date('2018-09-22T15:00:00')
-    },  
-    {      
-        id: 1, 
-        title: 'Task 1',
-        content : 'Go to the desired location, where you want to create a file.',
-        status: 'In progress',
-        date_creation : new Date("17/05/2023"),
-        update_date : new Date("17/05/2023")
-    }, 
-    {      
-        id: 2, 
-        title: 'Task 2',
-        content : 'Go to the desired location, where you want to create a file.',
-        status: 'In progress',
-        date_creation : new Date("17/06/2023"),
-        update_date : new Date("17/06/2023")
-    }
-];
-
 /******** Get  **********/
-
 // Get all tasks
 router.get('/allTasks', (req, res) => {
     Task.find()

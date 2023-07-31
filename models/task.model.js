@@ -7,9 +7,9 @@ mongoose.connect(process.env.DB_CONNECTION_URL)
 
 // Collection Schema
 const taskSchema = new mongoose.Schema({
-    title: {type:String,require:true,minlength: 4},
-    content: {type:String,require:true,minlength: 4},
-    status: {type:String,enum:['In progress','Done'],require:true,default:'In progress'},
+    title: {type:String,required:true,minlength: 4},
+    content: {type:String,required:true,minlength: 4},
+    status: {type:String,enum:['In progress','Done'],required:true,default:'In progress'},
     date_creation : {type:Date,default:Date.now},
     update_date : {type:Date,default:Date.now}
 });

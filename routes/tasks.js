@@ -8,7 +8,7 @@ router.get('/allTasks', (req, res) => {
     Task.find()
         .then((result) => res.send(result))
         .catch((err) => res.status(400).send(err))
-});
+}); 
 
 // Get specified Task ( using ID )
 router.get('/taskByID/:id', (req, res) => {

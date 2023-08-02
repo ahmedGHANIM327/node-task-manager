@@ -1,24 +1,26 @@
 const {Task} = require('../models/task.model')
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth.middleware')
+const authAdmin = require('../middleware/admin.middleware')
 
 /******** Get  **********/
 // Get all tasks
-router.get('/allTasks', (req, res) => {
+router.get('/allTasks',auth, (req, res) => {
     Task.find()
         .then((result) => res.send(result))
         .catch((err) => res.status(400).send(err))
 }); 
 
 // Get specified Task ( using ID )
-router.get('/taskByID/:id', (req, res) => {
+router.get('/taskByID/:id',auth, (req, res) => {
     Task.findOne({'_id':req.params.id})
         .then((result) => res.send(result))
         .catch((err) => res.status(400).send(err))
 });
 
 /******** Post  **********/
-router.post('/addTask', (req, res) => {
+router.post('/addTask',auth,authAdmin, (req, res) => {
 
     // Create task to add
     const task = {
@@ -33,7 +35,7 @@ router.post('/addTask', (req, res) => {
 });
 
 /******** Put **********/
-router.put('/updateTask/:id', (req, res) => {
+router.put('/updateTask/:id',auth,authAdmin, (req, res) => {
 
     const updatedTask = {
         title : req.body.title,
@@ -54,7 +56,7 @@ router.put('/updateTask/:id', (req, res) => {
 
 });
 
-router.put('/doneTask/:id', (req, res) => {
+router.put('/doneTask/:id',auth,authAdmin, (req, res) => {
 
     const updatedTask = {
         status : 'Done',
@@ -74,7 +76,7 @@ router.put('/doneTask/:id', (req, res) => {
 });
 
 /******** Delete **********/
-router.delete('/deleteTask/:id', (req, res) => {
+router.delete('/deleteTask/:id',auth,authAdmin, (req, res) => {
 
     Task.findByIdAndRemove(req.params.id)
         .then((result) => {

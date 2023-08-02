@@ -2,7 +2,6 @@ const {User,validateUserLogin} = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const express = require('express');
 const router = express.Router();
-const R = require('ramda');
 
 router.post('/', async (req, res) => {
 
@@ -15,7 +14,9 @@ router.post('/', async (req, res) => {
     const validPassword = await bcrypt.compare(req.body.password, user.password)
     if(!validPassword) return res.status(400).send('Invalid email or password.');
 
-    res.send('Welcome');
+    const token = user.generateAuthToken();
+
+    res.send(token);
 
 });
 

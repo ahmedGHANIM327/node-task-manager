@@ -1,20 +1,22 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
 const passwordComplexity = require('joi-password-complexity');
-
-// Connection
-/*mongoose.connect(process.env.DB_CONNECTION_URL)
-    .then(() => console.log("connected to mongodb ..."))
-    .catch((err) => console.error("can't connect ...",err))*/
+const jwt = require('jsonwebtoken');
 
 // Collection Schema
 const userSchema = new mongoose.Schema({
     name: {type:String,required:true,minlength: 4},
     email: {type:String,required:true,minlength: 4,unique:true},
-    password: {type:String,required:true,minlength: 4}
+    password: {type:String,required:true,minlength: 4},
+    isAdmin:{type:Boolean}
 });
 
+userSchema.methods.generateAuthToken = function() {
+    return jwt.sign({_id:this._id,isAdmin:this.isAdmin},process.env.JWT_PRIVATE_KEY);
+}
+
 const User = mongoose.model('users',userSchema);
+
 
 // Joi password complexity options
 const complexityOptions = {
@@ -32,6 +34,7 @@ function validateUser(user) {
         name: Joi.string().min(4).required(),
         email: Joi.string().min(4).email().required(),
         password: passwordComplexity(complexityOptions).required(),
+        isAdmin: Joi.boolean()
     });
 
     return userValidationSchema.validate(user);

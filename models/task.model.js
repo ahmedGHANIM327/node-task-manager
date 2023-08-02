@@ -1,10 +1,5 @@
 const mongoose = require('mongoose');
 
-// Connection
-mongoose.connect(process.env.DB_CONNECTION_URL)
-    .then(() => console.log("connected to mongodb ..."))
-    .catch((err) => console.error("can't connect ...",err))
-
 // Collection Schema
 const taskSchema = new mongoose.Schema({
     title: {type:String,required:true,minlength: 4},

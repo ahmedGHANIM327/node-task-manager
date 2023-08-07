@@ -6,10 +6,11 @@ const authAdmin = require('../middleware/admin.middleware')
 
 /******** Get  **********/
 // Get all tasks
-router.get('/allTasks',auth, (req, res) => {
-    Task.find()
-        .then((result) => res.send(result))
-        .catch((err) => res.status(400).send(err))
+router.get('/allTasks',auth, async (req, res) => {
+
+    const tasks = await Task.find();
+
+    res.send(tasks);
 }); 
 
 // Get specified Task ( using ID )

@@ -44,6 +44,7 @@ Open your web browser and visit `http://localhost:3000` to access the Task Manag
 - Joi
 - Ramda
 - JWT
+- Winston
 
 ## Contributions
 

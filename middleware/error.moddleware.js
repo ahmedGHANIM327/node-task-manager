@@ -1,7 +1,8 @@
-const logger = require('../logs/winston.logs')
+const {dbLogger,consoleLogger} = require('../logs/winston.logs')
 
 function errorMidd(err,req,res,next) {
-    logger.error(err.message,err);
+    dbLogger.error(err.message,err);
+    consoleLogger.error(err.message,err);
     res.status(500).send('Something failed !');
 }
 

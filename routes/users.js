@@ -3,13 +3,11 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth.middleware');
-const asyncMiddleware = require('../middleware/async.middleware');
 const R = require('ramda');
 
 /******** Get  **********/
 // Get all users
 router.get('/allUsers',async (req, res) => {
-    throw new Error('could not get errors');
     const users = await User.find();
     res.send(users);
 }); 
